@@ -1,5 +1,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
+RUN echo ${BASE_IMAGE}
 
 # Copy the build scripts
 WORKDIR /
