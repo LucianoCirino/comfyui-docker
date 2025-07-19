@@ -37,7 +37,7 @@ target "cu128-py312" {
     tags = ["${REGISTRY}/${REGISTRY_USER}/${APP}:cu128-py312-${RELEASE}"]
     args = {
         RELEASE                    = "${RELEASE}"
-        BASE_IMAGE                 = "ashleykza/runpod-base:2.4.4-python3.12-cuda12.8.1-torch2.7.1"
+        BASE_IMAGE                 = "${BASE_IMAGE_REPOSITORY}:${BASE_IMAGE_VERSION}-python3.12-cuda12.8.1-torch2.7.1"
         INDEX_URL                  = "https://download.pytorch.org/whl/cu128"
         TORCH_VERSION              = "2.7.1+cu128"
         XFORMERS_VERSION           = "0.0.31"
