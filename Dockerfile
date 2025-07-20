@@ -1,6 +1,9 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+# Install tree
+RUN apt-get update && apt-get install -y tree && rm -rf /var/lib/apt/lists/*
+
 # Copy the build scripts
 WORKDIR /
 COPY --chmod=755 build/* ./
