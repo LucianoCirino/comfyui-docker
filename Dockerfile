@@ -1,8 +1,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# Install tree
-RUN apt-get update && apt-get install -y tree && rm -rf /var/lib/apt/lists/*
+# Install tree and flask for log viewer
+RUN apt-get update && apt-get install -y tree && \
+    pip install flask && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy the build scripts
 WORKDIR /
@@ -20,6 +22,9 @@ ARG APP_MANAGER_VERSION
 RUN /install_app_manager.sh
 COPY app-manager/config.json /app-manager/public/config.json
 COPY --chmod=755 app-manager/*.sh /app-manager/scripts/
+
+# Install Log Viewer
+COPY --chmod=755 log-viewer /log-viewer
 
 # Install CivitAI Model Downloader
 # ARG CIVITAI_DOWNLOADER_VERSION
