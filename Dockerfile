@@ -32,7 +32,7 @@ RUN rm -f /install_*.sh
 RUN rm -f /etc/ssh/ssh_host_*
 
 # NGINX Proxy
-#COPY nginx/nginx.conf /etc/nginx/nginx.conf #WHAT IS THIS USED FOR?!
+COPY nginx/nginx.conf /etc/nginx/nginx.conf #WHAT IS THIS USED FOR?!
 
 # Set template version
 ARG RELEASE
