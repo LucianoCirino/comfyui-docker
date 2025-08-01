@@ -25,10 +25,6 @@ COPY --chmod=755 app-manager/*.sh /app-manager/scripts/
 COPY --chmod=755 log-viewer /log-viewer
 RUN /install_log_viewer.sh
 
-# Install CivitAI Model Downloader
-# ARG CIVITAI_DOWNLOADER_VERSION
-# RUN /install_civitai_model_downloader.sh
-
 # Cleanup installation scripts
 RUN rm -f /install_*.sh
 
@@ -36,7 +32,7 @@ RUN rm -f /install_*.sh
 RUN rm -f /etc/ssh/ssh_host_*
 
 # NGINX Proxy
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+#COPY nginx/nginx.conf /etc/nginx/nginx.conf #WHAT IS THIS USED FOR?!
 
 # Set template version
 ARG RELEASE
