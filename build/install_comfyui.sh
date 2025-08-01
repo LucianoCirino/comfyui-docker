@@ -41,6 +41,11 @@ repos=(
     "https://github.com/chrisgoringe/cg-use-everywhere"
     "https://github.com/kijai/ComfyUI-segment-anything-2"
     "https://github.com/kijai/ComfyUI-Florence2"
+    "https://github.com/pollockjj/ComfyUI-MultiGPU"
+    "https://github.com/Azornes/Comfyui-LayerForge"
+    "https://github.com/ClownsharkBatwing/RES4LYF"
+    "https://github.com/city96/ComfyUI-GGUF"
+    "https://github.com/crystian/comfyui-crystools"
 )
 
 # Loop through each repository
