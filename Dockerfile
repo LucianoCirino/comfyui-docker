@@ -21,6 +21,10 @@ RUN /install_app_manager.sh
 COPY app-manager/config.json /app-manager/public/config.json
 COPY --chmod=755 app-manager/*.sh /app-manager/scripts/
 
+# Install Log Viewer
+COPY --chmod=755 log-viewer /log-viewer
+RUN /install_log_viewer.sh
+
 # Install CivitAI Model Downloader
 # ARG CIVITAI_DOWNLOADER_VERSION
 # RUN /install_civitai_model_downloader.sh

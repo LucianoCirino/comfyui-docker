@@ -159,3 +159,6 @@ else
 
     /start_comfyui.sh "${ARGS[@]}"
 fi
+
+# Start ComfyUI Log Viewer
+/log-viewer/start_log_viewer.sh
