@@ -1,19 +1,28 @@
 #!/bin/bash
-# File: /scripts/stop_gdrive_sync.sh
-# Stop script for Google Drive sync service
+# File: drive-sync/stop.sh
+# Stop script for Google Drive sync service (follows log-viewer/stop.sh pattern)
 
-if [ -f /tmp/gdrive_sync.pid ]; then
-    PID=$(cat /tmp/gdrive_sync.pid)
-    if ps -p $PID > /dev/null; then
-        echo "Stopping Google Drive sync (PID: $PID)..."
+if [ -f /tmp/drive-sync.pid ]; then
+    PID=$(cat /tmp/drive-sync.pid)
+    if ps -p $PID > /dev/null 2>&1; then
+        echo "Stopping drive sync service (PID: $PID)..."
         kill $PID
-        rm /tmp/gdrive_sync.pid
-        echo "Google Drive sync stopped"
+
+        # Wait for process to stop
+        sleep 2
+
+        if ps -p $PID > /dev/null 2>&1; then
+            echo "Process didn't stop gracefully, forcing..."
+            kill -9 $PID
+        fi
+
+        rm /tmp/drive-sync.pid
+        echo "Drive sync service stopped"
     else
-        echo "Google Drive sync not running (stale PID)"
-        rm /tmp/gdrive_sync.pid
+        echo "Drive sync process not found (PID: $PID)"
+        rm /tmp/drive-sync.pid
     fi
 else
-    echo "Google Drive sync not running (no PID file)"
+    echo "Drive sync service is not running (no PID file found)"
 fi
 

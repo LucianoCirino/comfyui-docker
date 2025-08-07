@@ -23,9 +23,9 @@ from googleapiclient.http import MediaFileUpload
 # Configuration
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 OUTPUT_DIR = os.getenv('COMFYUI_OUTPUT_DIR', '/workspace/ComfyUI/output')
-STATE_FILE = os.getenv('SYNC_STATE_FILE', '/workspace/sync_state.json')
+STATE_FILE = os.getenv('SYNC_STATE_FILE', '/workspace/drive-sync-state.json')
 GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER_NAME', 'ComfyUI-Outputs')
-TOKEN_FILE = os.getenv('GDRIVE_TOKEN_FILE', '/workspace/token.json')
+TOKEN_FILE = os.getenv('GDRIVE_TOKEN_FILE', '/workspace/gdrive-token.json')
 CREDS_FILE = os.getenv('GDRIVE_CREDS_FILE', '/workspace/credentials.json')
 
 # File patterns to ignore

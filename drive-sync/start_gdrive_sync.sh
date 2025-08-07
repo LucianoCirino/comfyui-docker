@@ -1,43 +1,55 @@
 #!/bin/bash
-# File: /scripts/start_gdrive_sync.sh
-# Startup script for Google Drive sync service
+# File: drive-sync/start.sh
+# Start script for Google Drive sync service (follows log-viewer/start.sh pattern)
 
-# Check if we should enable sync
+# Check if sync should be enabled
 if [ "$ENABLE_GDRIVE_SYNC" = "false" ]; then
-    echo "Google Drive sync disabled (ENABLE_GDRIVE_SYNC=false)"
+    echo "Google Drive sync is disabled (ENABLE_GDRIVE_SYNC=false)"
     exit 0
 fi
 
-# Check for RunPod secret and create credentials file if needed
+# Handle RunPod secret if provided
 if [ -n "$GDRIVE_CREDS_JSON" ] && [ ! -f "/workspace/credentials.json" ]; then
     echo "Creating credentials from RunPod secret..."
     echo "$GDRIVE_CREDS_JSON" | base64 -d > /workspace/credentials.json
 fi
 
-# Check if credentials exist
+# Check for credentials
 if [ ! -f "/workspace/credentials.json" ]; then
-    echo "Google Drive sync disabled (no credentials found)"
-    echo "Run setup_gdrive_sync.sh for instructions"
+    echo "Warning: Google Drive credentials not found at /workspace/credentials.json"
+    echo "Drive sync will not start. To enable:"
+    echo "  1. Get OAuth2 credentials from Google Cloud Console"
+    echo "  2. Save as /workspace/credentials.json"
+    echo "  3. Restart the service"
     exit 0
 fi
 
-# Setup if needed
-if [ ! -d "/workspace/gdrive_sync_venv" ]; then
-    echo "First run detected, running setup..."
-    /scripts/setup_gdrive_sync.sh
+# Check if already running
+if [ -f /tmp/drive-sync.pid ]; then
+    PID=$(cat /tmp/drive-sync.pid)
+    if ps -p $PID > /dev/null 2>&1; then
+        echo "Drive sync is already running (PID: $PID)"
+        exit 0
+    else
+        echo "Removing stale PID file"
+        rm /tmp/drive-sync.pid
+    fi
 fi
 
 # Activate virtual environment
-source /workspace/gdrive_sync_venv/bin/activate
+source /workspace/venvs/drive-sync/bin/activate
 
 # Start the sync service
+LOG_FILE="/workspace/logs/drive-sync/sync_$(date +%Y%m%d_%H%M%S).log"
 echo "Starting Google Drive sync service..."
-LOG_FILE="/workspace/gdrive_sync_logs/sync_$(date +%Y%m%d_%H%M%S).log"
-nohup python /scripts/gdrive_sync.py > "$LOG_FILE" 2>&1 &
-SYNC_PID=$!
+echo "Log file: $LOG_FILE"
 
-echo "Google Drive sync started (PID: $SYNC_PID)"
-echo "Logs: $LOG_FILE"
+nohup python /drive-sync/gdrive_sync.py > "$LOG_FILE" 2>&1 &
+PID=$!
 
-# Save PID for later management
-echo $SYNC_PID > /tmp/gdrive_sync.pid
+# Save PID
+echo $PID > /tmp/drive-sync.pid
+
+echo "Drive sync started successfully (PID: $PID)"
+
+deactivate

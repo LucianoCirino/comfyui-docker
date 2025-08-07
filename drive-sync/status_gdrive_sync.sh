@@ -1,31 +1,42 @@
 #!/bin/bash
-# File: /scripts/status_gdrive_sync.sh
+# File: drive-sync/status.sh (Optional - for checking status)
 # Status check for Google Drive sync service
 
-if [ -f /tmp/gdrive_sync.pid ]; then
-    PID=$(cat /tmp/gdrive_sync.pid)
-    if ps -p $PID > /dev/null; then
-        echo "✓ Google Drive sync is running (PID: $PID)"
+if [ -f /tmp/drive-sync.pid ]; then
+    PID=$(cat /tmp/drive-sync.pid)
+    if ps -p $PID > /dev/null 2>&1; then
+        echo "✓ Drive sync is running (PID: $PID)"
 
-        # Show recent logs
-        if [ -d "/workspace/gdrive_sync_logs" ]; then
-            LATEST_LOG=$(ls -t /workspace/gdrive_sync_logs/*.log 2>/dev/null | head -1)
+        # Show recent log entries
+        LOG_DIR="/workspace/logs/drive-sync"
+        if [ -d "$LOG_DIR" ]; then
+            LATEST_LOG=$(ls -t "$LOG_DIR"/*.log 2>/dev/null | head -1)
             if [ -n "$LATEST_LOG" ]; then
                 echo ""
-                echo "Recent activity:"
+                echo "Recent activity (last 5 lines):"
                 tail -5 "$LATEST_LOG"
             fi
         fi
 
-        # Show state info
+        # Show sync statistics
         if [ -f "/workspace/sync_state.json" ]; then
             echo ""
-            echo "Sync state:"
-            python3 -c "import json; data=json.load(open('/workspace/sync_state.json')); print(f\"  Files uploaded: {len(data.get('uploaded_files', []))}\"); print(f\"  Last updated: {data.get('last_updated', 'Never')}\")"
+            echo "Sync statistics:"
+            python3 -c "
+import json
+try:
+    with open('/workspace/sync_state.json') as f:
+        data = json.load(f)
+        print(f\"  Files uploaded: {len(data.get('uploaded_files', []))}\")
+        print(f\"  Last updated: {data.get('last_updated', 'Never')}\")
+except:
+    print('  Unable to read sync state')
+"
         fi
     else
-        echo "✗ Google Drive sync not running (stale PID)"
+        echo "✗ Drive sync is not running (stale PID: $PID)"
+        rm /tmp/drive-sync.pid
     fi
 else
-    echo "✗ Google Drive sync not running"
+    echo "✗ Drive sync is not running"
 fi

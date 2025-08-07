@@ -15,6 +15,7 @@ ARG INDEX_URL
 ARG COMFYUI_COMMIT
 RUN /install_comfyui.sh
 
+
 # Install Application Manager
 ARG APP_MANAGER_VERSION
 RUN /install_app_manager.sh
@@ -24,6 +25,10 @@ COPY --chmod=755 app-manager/*.sh /app-manager/scripts/
 # Install Log Viewer
 COPY --chmod=755 log-viewer /log-viewer
 RUN /install_log_viewer.sh
+
+# Install drive-sync
+COPY --chmod=755 drive-sync /drive-sync
+RUN /install_gdrive_sync.sh
 
 # Cleanup installation scripts
 RUN rm -f /install_*.sh
