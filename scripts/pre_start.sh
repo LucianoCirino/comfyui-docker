@@ -162,3 +162,6 @@ fi
 
 # Start ComfyUI Log Viewer
 /log-viewer/start_log_viewer.sh
+
+# Start Google Drive File Sync
+/drive-sync/start_gdrive_sync.sh

@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+echo "Installing Google Drive sync dependencies..."
+
+# Create virtual environment IN the drive-sync directory
+cd /drive-sync
+python3 -m venv venv
+
+# Install dependencies
+/drive-sync/venv/bin/pip install --upgrade pip
+/drive-sync/venv/bin/pip install \
+    google-auth==2.23.4 \
+    google-auth-oauthlib==1.1.0 \
+    google-auth-httplib2==0.1.1 \
+    google-api-python-client==2.108.0 \
+    watchdog==3.0.0
+
+echo "Drive sync dependencies installed successfully!"
